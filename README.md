@@ -104,14 +104,3 @@ docker-compose down
 ```
 
 -----
-
-### 👨‍💻 Créditos
-
-Desenvolvido para a disciplina de Residência de Software 2025.
-
-```
-
-5.  Depois de colar, role a página até o final e clique no botão verde **Commit changes**.
-
-Agora volte para a página inicial do seu repositório. Ele vai estar formatado, com títulos grandes e caixas de código cinza separadas!
-```
