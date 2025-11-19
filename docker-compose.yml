@@ -1,0 +1,70 @@
+version: '3'
+services:
+  # Serviço do Laravel (PHP)
+  app:
+    build:
+      context: .
+      dockerfile: DockerConfig/Dockerfile
+    image: residencia-app
+    container_name: residencia_app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./src:/var/www
+    networks:
+      - residencia-network
+
+  # Serviço Web (Nginx)
+  web:
+    image: nginx:alpine
+    container_name: residencia_web
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./src:/var/www
+      - ./DockerConfig/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - residencia-network
+    depends_on:
+      - app
+      - db
+
+  # Serviço de Banco de Dados (MySQL)
+  db:
+    image: mysql:8.0
+    container_name: residencia_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: residencia_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_USER: usuario
+    volumes:
+      - ./db:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - residencia-network
+
+      # ... (serviços app, web e db continuam iguais acima)
+
+  # NOVO SERVIÇO: O Robô Python
+  worker:
+    build:
+      context: ./agents
+      dockerfile: Dockerfile
+    container_name: residencia_worker
+    restart: always
+    environment:
+      API_URL: http://web:80/api/conteudos
+      SERPER_API_KEY: "INSIRA_SUA_CHAVE_SERPER_AQUI"
+      GEMINI_API_KEY: "INSIRA_SUA_CHAVE_GEMINI_AQUI"
+    depends_on:
+      - web
+    networks:
+      - residencia-network
+
+networks:
+  residencia-network:
+    driver: bridge
