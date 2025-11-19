@@ -1,19 +1,141 @@
-📊 InvestSmart AI - Residência 2025Plataforma de Inteligência Financeira Híbrida: Combina o poder de processamento de Agentes Autônomos com a curadoria e revisão humana.💡 Visão GeralEste projeto foi desenvolvido como requisito final da disciplina de Residência de Software. A proposta é solucionar o problema da "alucinação" em análises financeiras por IA, introduzindo um fluxo robusto onde a IA faz o trabalho pesado de coleta e redação, mas um especialista humano (Admin) valida o conteúdo antes de ir a público.🌟 Diferenciais do ProjetoArquitetura Assíncrona: Diferente de sistemas tradicionais que travam enquanto a IA pensa, este projeto utiliza Workers em Background. O Admin solicita a análise e pode continuar navegando enquanto o Python processa tudo em segundo plano.Frontend Leve: Interface construída com Blade e Bootstrap 5, garantindo carregamento instantâneo e responsividade sem a complexidade de frameworks JavaScript pesados.Integração via API: O ecossistema Python e PHP conversa através de uma API RESTful interna segura.🏗️ Arquitetura do SistemaO sistema é composto por dois módulos principais que rodam em containers Docker isolados:1. O Núcleo (Laravel 11)Gerencia o banco de dados MySQL.Provê a interface administrativa e pública.Expõe a API para comunicação com os agentes.Responsabilidade: Orquestração e Segurança.2. O Cérebro (Python Workers)Scripts autônomos que monitoram a fila de solicitações.Executam a coleta de dados em tempo real.Processam a inteligência generativa (LLM).Responsabilidade: Execução e Análise.🤖 O Squad de AgentesNossa inteligência artificial não é um bloco único. Ela é dividida em especialistas (Agentes) que colaboram entre si:AgenteFunçãoFerramentas👩‍💼 JúliaAnalista Quantitativa. Varre o mercado em busca de cotações, histórico de preços e variações percentuais.yfinance, Pandas🕵️‍♂️ PedroAnalista de Sentimento. Busca as últimas notícias na web para entender se o mercado está otimista ou pessimista.Serper.dev, Google Search📝 KeyRelator Sênior. Recebe os dados brutos da Júlia e do Pedro e utiliza o LLM Gemini para escrever o parecer final.Google Gemini Pro🚀 Como Rodar o ProjetoSiga este guia para levantar o ambiente completo em sua máquina local.Pré-requisitosDocker Desktop (Instalado e rodando).Git.1. InstalaçãoClone o repositório e entre na pasta:Bashgit clone https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git
+💰 Analista Financeiro IA - Residência 2025
+
+Sistema inteligente de recomendação de investimentos que utiliza Agentes de IA para coletar dados financeiros, buscar notícias de mercado e gerar relatórios de compra/venda com curadoria humana.
+
+
+
+Projeto composto por: Laravel (Site/API) + Python (Agentes IA) + Docker.
+
+
+
+🚀 Como rodar o projeto (Passo a Passo)
+
+Siga esta ordem exata para não ter erros.
+
+
+
+1. Pré-requisitos
+
+Tenha instalado no seu computador:
+
+
+
+Docker Desktop (Deve estar aberto e rodando).
+
+
+
+Git.
+
+
+
+2. Clonar e Entrar na Pasta
+
+Abra seu terminal e rode:
+
+
+
+git clone [https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git](https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git)
+
 cd meu_projeto_residencia
-2. Configuração de Chaves (Essencial)Abra o arquivo docker-compose.yml na raiz do projeto. Localize o serviço worker e insira suas chaves de API nas variáveis de ambiente:YAML    environment:
-      API_URL: http://web:80/api/conteudos
-      SERPER_API_KEY: "SUA_CHAVE_SERPER_AQUI"
-      GEMINI_API_KEY: "SUA_CHAVE_GEMINI_AQUI"
-3. Inicialização (Deploy)Este comando irá baixar as imagens, configurar a rede, o banco de dados e iniciar os servidores.Bashdocker-compose up -d --build
-⏳ Aguarde: Na primeira vez, pode levar alguns minutos. Espere até que todos os containers estejam com status Started.4. Setup do Banco de DadosCom os containers rodando, execute os comandos abaixo para criar a estrutura das tabelas e o usuário administrador:Bash# Criar tabelas
+
+3. Configurar as Chaves (Importante!)
+
+Abra o arquivo docker-compose.yml na raiz e procure as linhas do worker. Cole suas chaves reais dentro das aspas na seção environment:
+
+
+
+SERPER_API_KEY: "COLE_SUA_CHAVE_SERPER_AQUI"
+
+GEMINI_API_KEY: "COLE_SUA_CHAVE_GEMINI_AQUI"
+
+4. Subir o Projeto
+
+No terminal, rode o comando que baixa e liga tudo (pode demorar uns minutos na primeira vez):
+
+
+
+docker-compose up -d --build
+
+(Espere até aparecer "Started" para todos os containers).
+
+
+
+5. Configurar o Banco de Dados
+
+Precisamos criar as tabelas e o usuário Admin. Rode estes dois comandos em sequência:
+
+
+
+A. Criar as tabelas:
+
+
+
 docker-compose exec app php artisan migrate
 
-# Criar Usuário Admin
+B. Criar o Usuário Admin:
+
+
+
 docker-compose exec app php artisan tinker
-No terminal interativo que abrir, cole o comando abaixo:PHP\App\Models\User::create([
+
+(Vai abrir um terminal interativo >. Copie e cole o código abaixo e dê Enter):
+
+
+
+\App\Models\User::create([
+
     'name' => 'Administrador',
+
     'email' => 'admin@email.com',
+
     'password' => bcrypt('12345678')
+
 ]);
+
 exit
-🎮 Guia de Uso👨‍💻 Para o Administrador (Fluxo de Trabalho)Login: Acesse http://localhost:8000/admin e entre com admin@email.com / 12345678.Solicitação: No painel, digite o ticker de uma empresa (Ex: PETR4, VALE3, AAPL) e clique em "Gerar Relatório".Processamento: O sistema criará um card com status "Processando". O Worker Python irá capturar o pedido automaticamente.Revisão: Após alguns segundos (atualize a página), o status mudará para "Rascunho".Ação: Você pode Editar o texto gerado pela IA se encontrar erros, ou clicar em ✅ Aprovar para publicar.🌎 Para o Visitante (Público)Acesse http://localhost:8000.O visitante visualizará apenas os relatórios que passaram pelo crivo do Administrador, garantindo a confiabilidade da informação.🛠️ Stack TecnológicaLinguagens: PHP 8.2, Python 3.10.Frameworks: Laravel 11 ecosystem.Frontend: HTML5, CSS3, Bootstrap 5 (CDN).Database: MySQL 8.0.AI Services: Google Generative AI (Gemini 1.5).🛑 Comandos de ManutençãoParar o sistema: docker-compose downVer logs do Python (Debug): docker logs -f residencia_workerAcessar container PHP: docker-compose exec app bash
+
+🖥️ Como Usar o Sistema
+
+🔐 Área Administrativa (Para pedir análises)
+
+Acesse: http://localhost:8000/admin
+
+
+
+Login: admin@email.com
+
+
+
+Senha: 12345678
+
+
+
+No campo "Solicitar Nova Análise", digite uma ação (ex: PETR4 ou VALE3) e clique no botão.
+
+
+
+Aguarde uns 15 a 30 segundos. A IA vai processar e o card vai mudar para "Rascunho".
+
+
+
+Revise o texto e clique em "✅ Aprovar".
+
+
+
+🌍 Área Pública (Para visitantes)
+
+Acesse: http://localhost:8000
+
+
+
+Aqui aparecem apenas os relatórios que você aprovou.
+
+
+
+🛑 Como Parar
+
+Para desligar tudo e liberar memória do computador:
+
+
+
+docker-compose down
