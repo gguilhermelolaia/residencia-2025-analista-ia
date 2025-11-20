@@ -46,8 +46,6 @@ No terminal, rode o comando que baixa e liga tudo (pode demorar uns minutos na p
 docker-compose up -d --build
 ```
 
-Markdown
-
 ### 4.1. Instalação das Dependências (Apenas na primeira vez)
 Como o Git não salva as bibliotecas pesadas, você precisa instalá-las manualmente após clonar o projeto em um computador novo.
 
@@ -63,9 +61,6 @@ docker-compose exec app php artisan key:generate
 3. (Opcional) Verificar conexão: Abra o arquivo .env criado na pasta src e certifique-se de que DB_HOST=db.
 
 
----
-
-Depois de colar, clique em **Commit changes**. Agora vai ficar com os títulos em negrito e
 ### 5\. Configurar o Banco de Dados
 
 Precisamos criar as tabelas e o usuário Admin. Rode estes dois comandos em sequência:
