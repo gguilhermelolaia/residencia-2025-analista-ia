@@ -46,6 +46,18 @@ No terminal, rode o comando que baixa e liga tudo (pode demorar uns minutos na p
 docker-compose up -d --build
 ```
 
+### 4.1. Instalação das Dependências (Apenas na primeira vez)
+Como o Git não salva as bibliotecas pesadas, você precisa instalá-las manualmente após clonar:
+
+1. Instalar dependências do Laravel:
+docker-compose exec app composer install
+
+2. Configurar o arquivo de ambiente (.env):
+docker-compose exec app cp .env.example .env
+docker-compose exec app php artisan key:generate
+
+3. (Opcional) Verifique se o arquivo .env criado na pasta src está com DB_HOST=db e as senhas corretas.
+
 *(Espere até aparecer "Started" para todos os containers).*
 
 ### 5\. Configurar o Banco de Dados
