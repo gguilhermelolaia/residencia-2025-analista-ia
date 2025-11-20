@@ -61,7 +61,7 @@ docker-compose exec app php artisan key:generate
 3. (Opcional) Verificar conexão: Abra o arquivo .env criado na pasta src e certifique-se de que DB_HOST=db.
 
 
-### 5\. Configurar o Banco de Dados
+**5\. Configurar o Banco de Dados**
 
 Precisamos criar as tabelas e o usuário Admin. Rode estes dois comandos em sequência:
 
