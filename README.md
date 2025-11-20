@@ -23,8 +23,8 @@ Tenha instalado no seu computador:
 Abra seu terminal e rode:
 
 ```bash
-git clone [https://github.com/gguilhermelolaia/residencia-2025-analista-ia.git](https://github.com/gguilhermelolaia/residencia-2025-analista-ia.git)
-cd meu_projeto_residencia
+git clone https://github.com/gguilhermelolaia/residencia-2025-analista-ia.git
+cd residencia-2025-analista-ia
 ````
 
 ### 3\. Configurar as Chaves (Importante\!)
