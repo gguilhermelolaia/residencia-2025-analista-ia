@@ -45,11 +45,12 @@ No terminal, rode o comando que baixa e liga tudo (pode demorar uns minutos na p
 ```bash
 docker-compose up -d --build
 ```
-
 ### 4.1. Instalação das Dependências (Apenas na primeira vez)
+
 Como o Git não salva as bibliotecas pesadas, você precisa instalá-las manualmente após clonar o projeto em um computador novo.
 
 **1. Instalar dependências do Laravel:**
+
 ```bash
 docker-compose exec app composer install
 2. Configurar o arquivo de ambiente (.env):
@@ -60,26 +61,23 @@ docker-compose exec app cp .env.example .env
 docker-compose exec app php artisan key:generate
 3. (Opcional) Verificar conexão: Abra o arquivo .env criado na pasta src e certifique-se de que DB_HOST=db.
 
-
-**5\. Configurar o Banco de Dados**
-
+5. Configurar o Banco de Dados
 Precisamos criar as tabelas e o usuário Admin. Rode estes dois comandos em sequência:
 
-**A. Criar as tabelas:**
+A. Criar as tabelas:
 
-```bash
+Bash
+
 docker-compose exec app php artisan migrate
-```
+B. Criar o Usuário Admin:
 
-**B. Criar o Usuário Admin:**
+Bash
 
-```bash
 docker-compose exec app php artisan tinker
-```
+(Vai abrir um terminal interativo >. Copie e cole o código abaixo e dê Enter):
 
-*(Vai abrir um terminal interativo `>`. Copie e cole o código abaixo e dê Enter):*
+PHP
 
-```php
 \App\Models\User::create([
     'name' => 'Administrador',
     'email' => 'admin@email.com',
